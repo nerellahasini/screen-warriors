@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResearchHub AI</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+/* ===== BODY ===== */
+body{
+  height:100vh;
+  background:#0f0f1a;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+/* ===== Glow Background ===== */
+body::before{
+  content:"";
+  position:absolute;
+  width:600px;
+  height:600px;
+  background:radial-gradient(circle, rgba(160,32,240,0.6) 0%, rgba(0,0,0,0) 70%);
+  filter:blur(80px);
+  animation:rotate 15s linear infinite;
+}
+
+@keyframes rotate{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
+/* ===== Auth Container ===== */
+.auth-container{
+  position:relative;
+  background:rgba(255,255,255,0.05);
+  padding:40px;
+  border-radius:15px;
+  width:350px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 30px rgba(160,32,240,0.3);
+  z-index:2;
+}
+
+.auth-container h2{
+  color:white;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.auth-container p{
+  color:#bbb;
+  text-align:center;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.input-group{
+  margin-bottom:15px;
+}
+
+.input-group label{
+  color:#ccc;
+  font-size:14px;
+}
+
+.input-group input{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border:1px solid #444;
+  border-radius:8px;
+  background:transparent;
+  color:white;
+  outline:none;
+}
+
+.input-group input:focus{
+  border-color:#a020f0;
+}
+
+.btn{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(90deg,#a020f0,#ff00cc);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.toggle-text{
+  text-align:center;
+  margin-top:15px;
+  color:#bbb;
+  font-size:14px;
+}
+
+.toggle-text a{
+  color:#a020f0;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+form{
+  display:none;
+}
+
+form.active{
+  display:block;
+}
+
+/* ===== DASHBOARD ===== */
+.dashboard{
+  display:none;
+  width:100%;
+  height:100vh;
+  background:#f4f6fb;
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.sidebar{
+  width:220px;
+  background:white;
+  height:100%;
+  padding:20px;
+  position:absolute;
+  left:0;
+  top:0;
+}
+
+.sidebar h2{
+  color:#6a00ff;
+  margin-bottom:30px;
+}
+
+.sidebar ul{
+  list-style:none;
+}
+
+.sidebar ul li{
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.sidebar ul li:hover{
+  background:#f0e7ff;
+  color:#6a00ff;
+}
+
+.main{
+  margin-left:220px;
+  padding:30px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:40px;
+}
+
+.logout-btn{
+  background:#6a00ff;
+  color:white;
+  border:none;
+  padding:8px 15px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.hero{
+  text-align:center;
+  margin-top:80px;
+}
+
+.hero h1{
+  font-size:32px;
+  margin-bottom:15px;
+}
+
+.hero p{
+  color:#555;
+  margin-bottom:20px;
+}
+
+.primary-btn{
+  padding:10px 20px;
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(90deg,#6a00ff,#b700ff);
+  color:white;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= AUTH SECTION ================= -->
+<div class="auth-container" id="authSection">
+
+  <!-- LOGIN -->
+  <form id="loginForm" class="active" onsubmit="return loginUser()">
+    <h2>Welcome Back</h2>
+    <p>Sign in to continue</p>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" required>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" required>
+    </div>
+
+    <button class="btn">Sign In</button>
+
+    <div class="toggle-text">
+      Don’t have an account?
+      <a onclick="showRegister()">Register</a>
+    </div>
+  </form>
+
+  <!-- REGISTER -->
+  <form id="registerForm">
+    <h2>Create Account</h2>
+    <p>Register to get started</p>
+
+    <div class="input-group">
+      <label>Full Name</label>
+      <input type="text" required>
+    </div>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" required>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" required>
+    </div>
+
+    <button class="btn">Register</button>
+
+    <div class="toggle-text">
+      Already have an account?
+      <a onclick="showLogin()">Login</a>
+    </div>
+  </form>
+
+</div>
+
+<!-- ================= DASHBOARD SECTION ================= -->
+<div class="dashboard" id="dashboard">
+
+  <div class="sidebar">
+    <h2>ResearchHub AI</h2>
+    <ul>
+      <li>Home</li>
+      <li>Dashboard</li>
+      <li>Search Papers</li>
+      <li>AI Tools</li>
+      <li>Upload PDF</li>
+      <li>Settings</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div>Welcome User</div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="hero">
+      <h1>Your AI-Powered Research Assistant</h1>
+      <p>
+        Accelerate your research with intelligent paper discovery,
+        AI-powered insights and collaborative tools.
+      </p>
+      <button class="primary-btn">Start Researching</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showRegister(){
+  document.getElementById("loginForm").classList.remove("active");
+  document.getElementById("registerForm").classList.add("active");
+}
+
+function showLogin(){
+  document.getElementById("registerForm").classList.remove("active");
+  document.getElementById("loginForm").classList.add("active");
+}
+
+function loginUser(){
+  document.getElementById("authSection").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+  return false;
+}
+
+function logout(){
+  document.getElementById("dashboard").style.display="none";
+  document.getElementById("authSection").style.display="block";
+}
+</script>
+
+</body>
+</html>
