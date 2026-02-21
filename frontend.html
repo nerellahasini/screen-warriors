@@ -1,0 +1,254 @@
+import {
+    useState
+} from "react";
+import axios from "axios";
+
+export default function App() {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [msg, setMsg] = useState("");
+    const [reply, setReply] = useState("");
+    const [papers, setPapers] = useState([]);
+    const [logged, setLogged] = useState(false);
+
+    // REGISTER
+    const register = async () => {
+        await axios.post("http://localhost:8000/register", {
+            email,
+            password
+        });
+        alert("Registered Successfully");
+    }
+
+    // LOGIN
+    const login = async () => {
+        const res = await axios.post(
+            "http://localhost:8000/login", {
+                email,
+                password
+            });
+        if (res.data.token) {
+            setLogged(true);
+            alert("Login Success");
+        }
+    }
+
+    // SEARCH PAPERS
+    const search = async () => {
+        const res = await axios.get(
+            "http://localhost:8000/search?query=ai");
+        setPapers(res.data.papers);
+    }
+
+    // AI CHAT
+    const chat = async () => {
+        const res = await axios.post(
+            "http://localhost:8000/chat", {
+                msg
+            });
+        setReply(res.data.reply);
+    }
+
+    if (!logged) {
+        return ( <
+            div style = {
+                styles.loginBg
+            } >
+            <
+            div style = {
+                styles.loginCard
+            } >
+
+            <
+            h1 > ResearchHub AI < /h1>
+
+            <
+            input placeholder = "Email"
+            onChange = {
+                e => setEmail(e.target.value)
+            }
+            style = {
+                styles.input
+            }
+            />
+
+            <
+            input type = "password"
+            placeholder = "Password"
+            onChange = {
+                e => setPassword(e.target.value)
+            }
+            style = {
+                styles.input
+            }
+            />
+
+            <
+            button style = {
+                styles.btn
+            }
+            onClick = {
+                register
+            } >
+            Register <
+            /button>
+
+            <
+            button style = {
+                styles.btn
+            }
+            onClick = {
+                login
+            } >
+            Login <
+            /button>
+
+            <
+            /div> <
+            /div>
+        )
+    }
+
+    return ( <
+        div style = {
+            styles.dashboard
+        } >
+
+        <
+        h1 > AI Research Dashboard < /h1>
+
+        <
+        div style = {
+            styles.container
+        } >
+
+        <
+        div style = {
+            styles.card
+        } >
+        <
+        h2 > Search Papers < /h2> <
+        button style = {
+            styles.btn
+        }
+        onClick = {
+            search
+        } >
+        Search AI Papers <
+        /button>
+
+        <
+        ul > {
+            papers.map((p, i) => ( <
+                li key = {
+                    i
+                } > {
+                    p.title
+                } - {
+                    p.author
+                }({
+                    p.year
+                }) <
+                /li>
+            ))
+        } <
+        /ul> <
+        /div>
+
+        <
+        div style = {
+            styles.card
+        } >
+        <
+        h2 > AI Chat Assistant < /h2>
+
+        <
+        input placeholder = "Ask AI"
+        onChange = {
+            e => setMsg(e.target.value)
+        }
+        style = {
+            styles.input
+        }
+        />
+
+        <
+        button style = {
+            styles.btn
+        }
+        onClick = {
+            chat
+        } >
+        Ask AI <
+        /button>
+
+        <
+        p > {
+            reply
+        } < /p>
+
+        <
+        /div>
+
+        <
+        /div> <
+        /div>
+    )
+}
+
+// UI STYLES
+const styles = {
+
+    loginBg: {
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "linear-gradient(135deg,#667eea,#764ba2)"
+    },
+
+    loginCard: {
+        background: "#fff",
+        padding: "40px",
+        borderRadius: "20px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+        textAlign: "center"
+    },
+
+    dashboard: {
+        padding: "40px",
+        background: "#f5f6fa",
+        minHeight: "100vh"
+    },
+
+    container: {
+        display: "flex",
+        gap: "20px"
+    },
+
+    card: {
+        flex: 1,
+        background: "#fff",
+        padding: "20px",
+        borderRadius: "20px",
+        boxShadow: "0 5px 20px rgba(0,0,0,0.1)"
+    },
+
+    input: {
+        display: "block",
+        margin: "10px",
+        padding: "10px",
+        width: "80%"
+    },
+
+    btn: {
+        background: "#6c5ce7",
+        color: "#fff",
+        padding: "10px",
+        margin: "10px",
+        border: "none",
+        borderRadius: "10px",
+        cursor: "pointer"
+    }
+}
